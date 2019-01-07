@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form class="form-horizontal" method="POST">
+                <fieldset>
+                    <legend>Edit Profile</legend>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_email">Email</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control" id="user_email" placeholder="User Email"
+                                   name="user[email]" value="{{ user.email }}" readonly required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_fullName">Full Name</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control" id="user_fullName" placeholder="User Full Name"
+                                   name="user[fullName]" value="{{ user.fullName }}"  >
+                        </div>
+                    </div>
+
+                    {#<div class="form-group">#}
+                        {#<label class="col-sm-4 control-label" for="user_password">New Password</label>#}
+                        {#<div class="col-sm-4 ">#}
+                            {#<input type="text" class="form-control" id="user_password" placeholder="Enter New Password"#}
+                                   {#name="user[password]"  >#}
+                        {#</div>#}
+                    {#</div>#}
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_balance">Balance</label>
+                        <div class="col-sm-4 ">
+                            <input type="text" class="form-control" id="user_balance" placeholder="Balance"
+                                   name="user[balance]" value="{{ user.balance  }} " readonly>
+                        </div>
+                    </div>
+
+                    {{ form_row(form._token) }}
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-default" href="{{ path('home_index') }}">Cancel</a>
+                            <button type="submit" class="btn btn-success">Edit</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

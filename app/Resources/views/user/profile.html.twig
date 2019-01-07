@@ -11,6 +11,7 @@
         FullName: {{ user.fullName }}
         <p>Total Transactions: <strong>{{ orders|length }}</strong></p>
         <p>Total Money Spend: <strong>${{ total|number_format(2, '.', ',') }}</strong></p>
+        <a class="btn btn-success btn-s" href="{{ path('profile_edit') }}">edit profile &raquo;</a>
     </div>
 
     <hr/>

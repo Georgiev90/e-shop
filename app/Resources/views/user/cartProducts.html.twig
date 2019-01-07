@@ -40,6 +40,8 @@
             <footer>
                 <div class="pull-right">
                     <h3>Total Cart Value: <strong>${{ total|number_format(2, '.', ',') }}</strong></h3>
+                    <h3>Your Current Balance: <strong>${{ balance|number_format(2, '.', ',') }}</strong></h3>
+                    <h3>Balance after purchase: <strong>${{ moneyLeft|number_format(2, '.', ',') }}</strong></h3>
                     <a class="btn btn-success" href="{{ path('all_product_cart_buy') }}">buy all products</a>
                 </div>
             </footer>

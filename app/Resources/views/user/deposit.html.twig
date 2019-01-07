@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <legend>Deposit Money</legend>
+    <form class="form-horizontal" action="{{ path('user_deposit') }}" method="post">
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="user_balance">
+                <strong>Current Balance  ${{ user.balance|number_format(2, '.', ',') }}</strong></label>
+
+            <hr>
+            <div class="col-sm-4 "><b>Deposit amount</b>
+                <input type="number" step="0.01" class="form-control" id="amount" placeholder="Enter Amount"
+                       name="transaction[amount]" value="user_deposit" required="required">
+                <input type="submit" class="btn btn-default" value="DEPOSIT"/>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
