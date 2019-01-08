@@ -4,6 +4,7 @@ namespace EShopBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,9 +22,9 @@ class UserType extends AbstractType
             ->add('password', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'first_options'  => array('label' => 'Password'),
-                    'second_options' => array('label' => 'Repeat Password'),
-                )
-            );
+                    'second_options' => array('label' => 'Repeat Password'),)
+            )  ->add('picture', FileType::class,
+                ['data' => null]);;
     }
 
     public function configureOptions(OptionsResolver $resolver)

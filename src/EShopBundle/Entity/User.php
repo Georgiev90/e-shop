@@ -36,6 +36,28 @@ class User implements UserInterface
      */
     private $balance;
 
+    /**
+     * @return float
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param float $picture
+     */
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
+    }
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="picture", type="string", length=100, unique=false, options={"default" : 0})
+     */
+    private $picture;
+
     public function getBalance()
     {
         return $this->balance;

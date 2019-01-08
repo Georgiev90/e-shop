@@ -19,6 +19,17 @@ class HomeController extends Controller
      */
     public function indexAction(Request $request)
     {
+       if ($user = $this->getUser()){
+           $em = $this->getDoctrine()->getManager();
+           $products = $em
+               ->getRepository(Product::class)
+               ->createQueryBuilder('e')
+               ->addOrderBy('e.dateAdded', 'DESC')
+               ->getQuery()
+               ->execute();
+        $pic=$user->getPicture();
+           return $this->render('home/index.html.twig', ["userpic"=>"$pic","products" => $products]);
+       }
         $em = $this->getDoctrine()->getManager();
 
         $products = $em

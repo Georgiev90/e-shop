@@ -1,7 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
+    {% for msg in app.session.flashbag.get('message') %}
+        <div id="msg" class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{ msg }}
+        </div>
+    {% endfor %}
 
+    {% for msg in app.session.flashbag.get('success') %}
+        <div id="msg" class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{ msg }}
+        </div>
+    {% endfor %}
     <h3><u>Items In Your Cart</u>: <strong>{{ products|length }}</strong></h3>
 
     <div class="container body-content">
@@ -13,10 +25,7 @@
                             <h2>{{ product.name }}</h2>
                         </header>
 
-                        <a href="{{ path('product_details', {'id': product.id} ) }}"><img src="{{ product.pictureUrl }}"
-                                                                                       width="400px"
-                                                                                       height="200px"/></a>
-
+                        <a href="{{ path('product_details', {'id': product.id} ) }}"><img src="{{ asset('uploads/images/' ~ product.pictureUrl) }}" width="300" height="200" ></a>
                         <p>Price: <strong>${{ product.price|number_format(2, '.', ',') }}</strong></p>
 
                         <p>

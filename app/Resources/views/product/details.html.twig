@@ -1,6 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
+
+
+    {% for msg in app.session.flashbag.get('message') %}
+        <div id="msg" class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{ msg }}
+        </div>
+    {% endfor %}
+
+    {% for msg in app.session.flashbag.get('success') %}
+        <div id="msg" class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{ msg }}
+        </div>
+    {% endfor %}
     <div class="container body-content">
         <div class="row">
             <div class="col-md-12">
@@ -9,7 +24,7 @@
                         <h2>{{ product.name }}</h2>
                     </header>
 
-                    <img src="{{ asset('uploads/images/' ~ product.pictureUrl) }}" width="300" height="150" ></a>
+                    <img src="{{ asset('uploads/images/' ~ product.pictureUrl) }}" width="400" height="300" ></a>
 
                     <p>
                         {{ product.content }}

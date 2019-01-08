@@ -33,8 +33,8 @@ class CartController extends Controller
             $cartProducts[] = $product;
             $totalSum += $product->getPrice();
         }
-        $moneyLeft=$balance-$totalSum;
-        return $this->render('user\cartProducts.html.twig', ['moneyLeft'=>$moneyLeft,"balance"=>"$balance]",'products' => $cartProducts, 'total' => $totalSum]);
+        $moneyLeft = $balance - $totalSum;
+        return $this->render('user\cartProducts.html.twig', ['moneyLeft' => $moneyLeft, "balance" => "$balance]", 'products' => $cartProducts, 'total' => $totalSum]);
     }
 
     /**
@@ -55,7 +55,9 @@ class CartController extends Controller
         $productId = $product->getId();
 
         if ($user->isAuthor($product)) {
+            $this->addFlash("message","You can't add your own product");
             return $this->redirectToRoute('product_details', ['id' => $productId]);
+
         }
 
         $productCartRepo = $this->getDoctrine()->getRepository(ProductCart::class);
@@ -73,6 +75,8 @@ class CartController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($productCart);
         $em->flush();
+        $productName= $product->getName();
+        $this->addFlash("success","Successfully added $productName to your cart");
 
         return $this->redirectToRoute('cart_products');
     }
@@ -135,20 +139,24 @@ class CartController extends Controller
 
             $productCart->setIsDeleted(true);
             $balance = $user->getBalance();
-            $productCost=$product->getPrice();
-            $newBalance = $balance -$productCost;
-            if($newBalance<0){
-                throw new \Exception("not enough money!");
-            }
-            $user->setBalance($newBalance);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            $productCost = $product->getPrice();
+            $newBalance = $balance - $productCost;
+            if ($newBalance >= 0) {
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($order);
-            $em->persist($productCart);
-            $em->flush();
+                $user->setBalance($newBalance);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($order);
+                $em->persist($productCart);
+                $em->flush();
+                $productName= $order->getProduct()->getName();
+                $this->addFlash('success', "Successful purchase of $productName!");
+            } else {
+                $this->addFlash('message', "Not enough money");
+            }
         }
 
         return $this->redirectToRoute('cart_products');
@@ -178,22 +186,25 @@ class CartController extends Controller
             $order->setUser($user);
             $productCart->setIsDeleted(true);
             $balance = $user->getBalance();
-            $productCost=$order->getProduct()->getPrice();
+            $productCost = $order->getProduct()->getPrice();
 
             $newBalance = $balance - floatval($productCost);
-            if($newBalance<0){
-                throw new \Exception("not enough money!");
+            if ($newBalance >= 0) {
+
+                $user->setBalance($newBalance);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+
+                $em->persist($order);
+                $em->persist($productCart);
+                $em->flush();
+                $productName= $order->getProduct()->getName();
+                $this->addFlash('success', "Successful purchase of $productName!");
+            } else {
+                $this->addFlash('message', "Not enough money");
             }
-            $user->setBalance($newBalance);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            $em->persist($order);
-            $em->persist($productCart);
         }
-
-        $em->flush();
 
         return $this->redirectToRoute('cart_products');
     }

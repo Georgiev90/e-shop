@@ -6,6 +6,10 @@
 
     <div>
         <h2>User Information: </h2>
+        {% if user.picture  %}
+        Profile Picture <a href="{{ path('profile_edit' ) }}" ><img src="{{ asset('uploads/images/' ~ user.picture) }}" width="200" height="150" ></a>
+        {%endif %}
+        <br>
         Email: {{ user.email }}
         <br>
         FullName: {{ user.fullName }}

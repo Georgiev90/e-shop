@@ -29,7 +29,8 @@ class Transaction
      */
     public function setAmount($amount)
     {   if($amount<0){
-        throw new \Exception("Transaction with negative numbers is not allowed!");
+        //throw new \Exception("Transaction with negative numbers is not allowed!");
+
     }
         $this->amount = $amount;
     }

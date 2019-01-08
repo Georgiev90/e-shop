@@ -31,6 +31,12 @@
                     <ul class="nav navbar-nav navbar-right">
                         {% if app.user %}
                             <li>
+                                {% if app.user.picture %}
+                                 <a href="{{ path('profile_edit' ) }}" ><img src="{{ asset('uploads/images/' ~ app.user.picture) }}" width="40" height="30" ></a>
+                                {% endif %}
+                            </li>
+
+                            <li>
                                 <a href="{{ path('user_deposit') }}">
                                     Deposit
                                 </a>

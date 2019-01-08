@@ -12,6 +12,8 @@ use EShopBundle\Form\TransactionType;
 use EShopBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -124,7 +126,7 @@ class UserController extends Controller
     public function profileEdit(Request $request)
     {
         $userId = $this->getUser()->getId();
-        $current=$this->getUser();
+        $current = $this->getUser();
         $user = $repo = $this->getDoctrine()
             ->getRepository(User::class)
             ->find($userId);
@@ -137,7 +139,18 @@ class UserController extends Controller
             $password = $this->get("security.password_encoder")
                 ->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getPicture();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
+            try {
+                $file->move($this->getParameter('product_directory'),
+                    $fileName);
+            } catch (FileException $ex) {
+
+            }
+
+            $user->setPicture($fileName);
             $em->persist($user);
             $em->flush();
 
@@ -188,12 +201,17 @@ class UserController extends Controller
 
         if ($form->isSubmitted()) {
             $deposit = $transaction->getAmount();
-            $newBalance = $balance + floatval($deposit);
-            $user->setBalance($newBalance);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($currentUser);
-            $em->flush();
-            return $this->render('user/deposit.html.twig', ['user' => $currentUser, 'user[balance]' => $balance]);
+            if ($deposit >= 0) {
+
+                $newBalance = $balance + floatval($deposit);
+                $user->setBalance($newBalance);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($currentUser);
+                $em->flush();
+                $this->addFlash('success', "$$deposit Successfully added to your account");
+            } else {
+                $this->addFlash('message', "Transaction with negative numbers is not allowed!");
+            }
         }
         return $this->render('user/deposit.html.twig', ['user' => $currentUser, 'user[balance]' => $balance]);
     }
@@ -222,15 +240,20 @@ class UserController extends Controller
 
         if ($form->isSubmitted()) {
             $withdraw = $transaction->getAmount();
-            if ($withdraw > $balance) {
-                Throw new \Exception("You don't have enough money!");
+            if ($withdraw > 0 && $withdraw < $balance) {
+
+                $newBalance = $balance - floatval($withdraw);
+                $user->setBalance($newBalance);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($currentUser);
+                $em->flush();
+                $this->addFlash('success', "$$withdraw Successfully withdrawn from your account");
+            } else if ($withdraw > $balance) {
+                $this->addFlash('message', "You don't have enough money!");
+            } else {
+                $this->addFlash('message', "Transaction with negative amounts is not allowed!");
             }
-            $newBalance = $balance - floatval($withdraw);
-            $user->setBalance($newBalance);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($currentUser);
-            $em->flush();
-            return $this->render('user/withdraw.html.twig', ['user' => $currentUser, 'user[balance]' => $balance]);
+
         }
         return $this->render('user/withdraw.html.twig', ['user' => $currentUser, 'user[balance]' => $balance]);
     }
