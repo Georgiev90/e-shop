@@ -3,7 +3,7 @@
 {% block main %}
     <div class="container body-content span=8 offset=2">
         <div class="well">
-            <form class="form-horizontal" method="POST">
+            <form class="form-horizontal" enctype="multipart/form-data" method="POST">
                 <fieldset>
                     <legend>Edit Product</legend>
 
@@ -31,13 +31,14 @@
                         </div>
                     </div>
 
-
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="product_image">Image Url</label>
                         <div class="col-sm-4 ">
-                            <input type="url" class="form-control" id="product_image" placeholder="image"
-                                   name="product[pictureUrl]" value="{{ product.pictureUrl }}">
+                            <input type="file" accept=".jpg, .png" class="form-control" id="product_image" placeholder="image"
+                                   name="product[pictureUrl]">
                         </div>
+                    </div>
+
                     </div>
 
                     {{ form_row(form._token) }}

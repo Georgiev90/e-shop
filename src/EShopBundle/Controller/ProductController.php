@@ -9,6 +9,8 @@ use EShopBundle\Entity\User;
 use EShopBundle\Form\ProductType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,7 +35,18 @@ class ProductController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getPictureUrl();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
+            try {
+                $file->move($this->getParameter('product_directory'),
+                    $fileName);
+            } catch (FileException $ex) {
+
+            }
+
+            $product->setPictureUrl($fileName);
             $product->setAuthor($user);
             $product->setViewCount(0);
 
@@ -89,6 +102,18 @@ class ProductController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getPictureUrl();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+            try {
+                $file->move($this->getParameter('product_directory'),
+                    $fileName);
+            } catch (FileException $ex) {
+
+            }
+
+            $product->setPictureUrl($fileName);
             $em->persist($product);
             $em->flush();
 

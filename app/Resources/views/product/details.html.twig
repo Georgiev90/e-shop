@@ -9,7 +9,7 @@
                         <h2>{{ product.name }}</h2>
                     </header>
 
-                    <img src="{{ product.pictureUrl }}" width="400px" height="200px"/>
+                    <img src="{{ asset('uploads/images/' ~ product.pictureUrl) }}" width="300" height="150" ></a>
 
                     <p>
                         {{ product.content }}

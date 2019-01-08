@@ -2,6 +2,7 @@
 
 namespace EShopBundle\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
@@ -16,7 +17,8 @@ class ProductType extends AbstractType
             ->add('name', TextType::class)
             ->add('content', TextType::class)
             ->add('price', NumberType::class)
-            ->add('pictureUrl', TextType::class);
+            ->add('pictureUrl', FileType::class,
+                ['data' => null]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -11,7 +11,7 @@
                             <h2>{{ product.name }}</h2>
                         </header>
 
-                        <a href="{{ path('product_details', {'id': product.id} ) }}" ><img src="{{ product.pictureUrl }}" width="300px" height="150px"/></a>
+                        <a href="{{ path('product_details', {'id': product.id} ) }}" ><img src="{{ asset('uploads/images/' ~ product.pictureUrl) }}" width="300" height="150" ></a>
 
                         <p>Price: <strong>${{ product.price|number_format(2, '.', ',') }}</strong></p>
 
